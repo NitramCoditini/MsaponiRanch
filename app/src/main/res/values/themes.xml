@@ -1,0 +1,26 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MsaponiRanch" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="circle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0%</item>
+        <item name="cornerSizeTopRight">0%</item>
+        <item name="cornerSizeBottomRight">50%</item>
+        <item name="cornerSizeBottomLeft">50%</item>
+    </style>
+
+    <style name="Theme.MsaponiRanch" parent="Base.Theme.MsaponiRanch" />
+
+    <style name="Theme.MsaponiRanch.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.MsaponiRanch.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MsaponiRanch.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

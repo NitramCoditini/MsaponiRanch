@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="250dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardElevation="5dp"
+        app:cardCornerRadius="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/cattlePoster"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginEnd="8dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:contentDescription="Lost Item Poster" />
+
+            <TextView
+                android:id="@+id/CowName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cow Name"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/CowBreed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:text="Cow breed"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/CowGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cow gender"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/CowWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cow weight"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/CowAge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cow Age"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
+
+
+
+
+
+            <ImageView
+                android:id="@+id/helpIcon"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_more_horiz_24"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:focusable="true" />
+
+
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</LinearLayout>

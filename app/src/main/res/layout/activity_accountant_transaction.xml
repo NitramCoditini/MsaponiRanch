@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AccountantTransactionActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/RegTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/sunnyregular"
+            android:text="Set Monthly budget"
+            android:textColor="@color/dark_blue"
+            android:textSize="36sp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/InputText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp">
+
+        <EditText
+            android:id="@+id/budgetName"
+            android:layout_width="match_parent"
+            android:textColor="@color/black"
+            android:background="@drawable/custom_edittext"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/iconsmoneybag"
+            android:drawablePadding="20dp"
+            android:hint="Monthly Budget"
+            android:inputType="number">
+
+        </EditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="10dp"
+        android:background="@color/white"
+        android:layout_marginTop="10dp"
+        android:gravity="center">
+        <Button
+            android:id="@+id/addBudget"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/dark_blue"
+            android:text="Add Budget"
+            android:enabled="false"
+            android:textSize="18sp"
+            app:cornerRadius="20dp" />
+
+        <Button
+            android:id="@+id/checkTimeDelay"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/dark_blue"
+            android:text="Time delay"
+            android:textSize="18sp"
+            app:cornerRadius="20dp" />
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/errorMes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Click first time delay"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:fontFamily="@font/sagewebfont"
+            android:textColor="#FF0000"
+            android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/dark_blue"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/viewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sunnyregular"
+            android:text="Accountant activity"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_marginStart="10dp"
+            android:background="@color/dark_blue"
+            android:layout_marginTop="10dp"
+            android:gravity="left">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Initial Budget"
+                android:layout_marginEnd="15dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/budgetTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="30,000"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@color/dark_blue"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="left">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Money remaining"
+                android:layout_marginEnd="15dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:gravity="center" />
+
+        <TextView
+            android:id="@+id/remainingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="30,000"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:gravity="center" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/purchases"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Purchase History"
+            android:fontFamily="@font/sunnyregular"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            android:layout_gravity="center" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/purchaseRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal" />
+
+    </LinearLayout>
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "680031874065",
+    "project_id": "msaponiranch",
+    "storage_bucket": "msaponiranch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680031874065:android:76fce62ff0209eb85155b0",
+        "android_client_info": {
+          "package_name": "com.example.msaponiranch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKs59NliDmjAajl10DyDZRYj4RrjVS2j0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
