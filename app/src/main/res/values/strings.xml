@@ -29,6 +29,18 @@
         <item>Triatix Spray</item>
 
     </string-array>
+    <string-array name="Field_Feed_available">
+        <item>Napier grass</item>
+        <item>Wheat straw</item>
+        <item>Maize stover</item>
+        <item>Lucerne</item>
+        <item>Banana Leaves</item>
+
+
+    </string-array>
+
+
+
     <string name="title_activity_ranch_hand">RanchHandActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
