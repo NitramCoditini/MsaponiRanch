@@ -196,6 +196,21 @@
                 android:textColor="#FF0000"
                 android:textSize="14sp" />
 
+
+            <TextView
+                android:id="@+id/nameWorker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Click the card view below to confirm feed details"
+                android:padding="8dp"
+                android:layout_marginEnd="2dp"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:visibility="gone"
+                android:fontFamily="@font/poppinsregular"
+                android:textColor="#FF0000"
+                android:textSize="14sp" />
+
             <androidx.cardview.widget.CardView
                 android:layout_width="250dp"
                 android:layout_gravity="center"

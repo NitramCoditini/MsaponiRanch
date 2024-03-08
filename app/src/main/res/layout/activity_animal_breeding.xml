@@ -6,4 +6,427 @@
     android:layout_height="match_parent"
     tools:context=".livestockactivityclassess.AnimalBreeding">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_blue"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/Category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center"
+                android:fontFamily="@font/mantastylesans"
+                android:text="Cattle details"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Click female cow to select breed status"
+                android:padding="8dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:fontFamily="@font/poppinsregular"
+                android:textColor="#FF0000"
+                android:textSize="14sp" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cattle1RecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearPregnancy"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/sunnyregular"
+                android:text="Pregnancy Details"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/dark_blue"
+                android:textSize="36sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:padding="5dp"
+                    android:gravity="left"
+                    android:layout_marginStart="50dp"
+                    android:textSize="20sp"
+                    android:text="Female pregnant:" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:id="@+id/cowParent"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_marginStart="15dp"
+                    android:textSize="20sp"
+                    android:text="" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:gravity="left"
+                    android:layout_marginStart="50dp"
+                    android:textSize="20sp"
+                    android:text="Male parent:" />
+
+                <Spinner
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="15dp"
+                    android:id="@+id/nameCow"
+                    android:gravity="center"
+                    android:background="@drawable/spinneredit"/>
+            </LinearLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/InputText13"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/custom_edittext">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/datePickerIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:clickable="true"
+                        android:contentDescription="Select Date"
+                        android:focusable="true"
+                        android:padding="20dp"
+                        android:src="@drawable/baseline_calendar_month_24" />
+
+                    <EditText
+                        android:id="@+id/dateEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:focusable="false"
+                        android:hint="Expected calving date"
+                        android:inputType="none" />
+                </LinearLayout>
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/pregnancyRec"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/dark_blue"
+                android:text="Add pregnancy record"
+                android:textSize="18sp"
+                app:cornerRadius="20dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:id="@+id/linearCalving"
+            android:layout_gravity="center_horizontal">
+
+
+            <TextView
+                android:id="@+id/RegTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/sunnyregular"
+                android:text="Add Your Calf"
+                android:textColor="@color/dark_blue"
+                android:textSize="36sp"
+                android:layout_gravity="center" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageButton
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="fitCenter"
+                    android:id="@+id/cowimage"/>
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/cowinfo"
+                    android:text="Click the image to put calf image"
+                    android:textSize="15sp"
+                    android:textColor="@color/dark_blue" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:padding="5dp"
+                    android:gravity="left"
+                    android:layout_marginStart="50dp"
+                    android:textSize="20sp"
+                    android:text="Female parent:" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:id="@+id/cowParent1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_marginStart="15dp"
+                    android:textSize="20sp"
+                    android:text="cow Name" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:gravity="left"
+                    android:layout_marginStart="50dp"
+                    android:textSize="20sp"
+                    android:text="Male parent:" />
+
+                <Spinner
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="15dp"
+                    android:id="@+id/nameCow1"
+                    android:gravity="center"
+                    android:background="@drawable/spinneredit"/>
+            </LinearLayout>
+
+
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/InputText1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp">
+
+                <EditText
+                    android:id="@+id/calfName"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/black"
+                    android:background="@drawable/custom_edittext"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/iconscow"
+                    android:drawablePadding="20dp"
+                    android:hint="Calf name tag"
+                    android:inputType="textPersonName">
+
+                </EditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Spinner
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:id="@+id/calfBreed"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/spinneredit"
+                android:layout_marginStart="12dp"
+                android:entries="@array/Breed_available">
+
+            </Spinner>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/InputText3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp">
+
+                <EditText
+                    android:id="@+id/calfWeight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/iconsweight"
+                    android:drawablePadding="20dp"
+                    android:inputType="number"
+                    android:background="@drawable/custom_edittext"
+                    android:fontFamily="@font/poppinsregular"
+                    android:hint="Calf Weight"
+                    android:textColor="@color/black" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+            <Spinner
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:id="@+id/gender"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/spinneredit"
+                android:layout_marginStart="12dp"
+                android:entries="@array/Gender_available">
+
+            </Spinner>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/InputText4"
+                    android:layout_width="250dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/calfAge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppinsregular"
+                        android:drawableStart="@drawable/iconsage"
+                        android:drawablePadding="20dp"
+                        android:hint="Calf Age in days"
+                        android:inputType="number"
+                        android:background="@drawable/custom_edittext"
+                        android:minHeight="48dp"
+                        android:textColor="@color/black"/>
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+            <ProgressBar
+                android:id="@+id/cowRegProgressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/calfReg"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/dark_blue"
+                android:text="Add Calf"
+                android:textSize="18sp"
+                app:cornerRadius="20dp" />
+
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

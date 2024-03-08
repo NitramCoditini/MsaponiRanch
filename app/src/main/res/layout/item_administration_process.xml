@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="218dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_gravity="left"
+    android:layout_height="130dp">
+
+
+
+
+
+        <TextView
+            android:id="@+id/tvProcessName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginStart="25dp"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/black"
+            android:text="Process Name" />
+
+        <TextView
+            android:id="@+id/tvDateAdministered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date Administered"
+            android:layout_gravity="left"
+            android:layout_marginStart="25dp"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/tvDosageInstruction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dosage Instruction"
+            android:layout_gravity="left"
+            android:layout_marginStart="25dp"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/tvDosageAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dosage Amount"
+            android:layout_gravity="left"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="25dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"/>
+    </LinearLayout>

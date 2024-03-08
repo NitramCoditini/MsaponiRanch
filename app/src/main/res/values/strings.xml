@@ -11,6 +11,11 @@
         <item>Female</item>
 
     </string-array>
+    <string-array name="Breed_available">
+        <item>PureBred</item>
+        <item>CrossBred</item>
+
+    </string-array>
     <string-array name="age_available">
         <item>years</item>
         <item>months</item>
@@ -38,7 +43,6 @@
 
 
     </string-array>
-
 
 
     <string name="title_activity_ranch_hand">RanchHandActivity</string>

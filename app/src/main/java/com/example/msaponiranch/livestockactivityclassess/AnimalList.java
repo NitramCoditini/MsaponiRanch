@@ -28,9 +28,6 @@ public class AnimalList extends AppCompatActivity {
 
     ArrayList<Model> modelArrayList;
 
-
-
-
     RecyclerView recyclerViewCategoryList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

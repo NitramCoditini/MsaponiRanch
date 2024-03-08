@@ -6,18 +6,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.msaponiranch.InventoryStuff.Model3;
 import com.example.msaponiranch.InventoryStuff.RecyclerAdapter3;
+import com.example.msaponiranch.ManagerStuff.CattleCondition;
 import com.example.msaponiranch.ManagerStuff.Model4;
 import com.example.msaponiranch.ManagerStuff.RecyclerAdapter4;
+import com.example.msaponiranch.ManagerStuff.TaskAssigning;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,6 +53,8 @@ public class RanchActivity extends AppCompatActivity {
 
     TextView fed;
 
+    RadioButton Rb1,Rb2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +62,11 @@ public class RanchActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.dateImage);
         fed = findViewById(R.id.fedDate);
+        Rb1 = findViewById(R.id.taskradioButton1);
+        Rb2 = findViewById(R.id.conditionradioButton1);
+
         calendar = Calendar.getInstance();
+
 
         LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
         recyclerViewCategoryList3 = findViewById(R.id.feedRecyclerView);
@@ -69,6 +79,32 @@ public class RanchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showDatePickerDialog();
+            }
+        });
+
+        Rb1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (Rb1.isChecked()) {
+                    Rb2.setEnabled(false);
+                    Intent i = new Intent(RanchActivity.this, TaskAssigning.class);
+                    startActivity(i);
+                }
+
+            }
+        });
+
+        Rb2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (Rb2.isChecked()) {
+                    Rb1.setEnabled(false);
+                    Intent i = new Intent(RanchActivity.this, CattleCondition.class);
+                    startActivity(i);
+                }
+
             }
         });
 
@@ -122,6 +158,7 @@ public class RanchActivity extends AppCompatActivity {
                     Model4 model = new Model4();
 
                     String cowName = snapshot.child("cowName").getValue(String.class);
+                    String ranchHandName = snapshot.child("ranchHandName").getValue(String.class);
                     String feedNameOf = snapshot.child("feedNameOf").getValue(String.class);
                     Double quantity = snapshot.child("quantity").getValue(Double.class);
                     Long currentTime = snapshot.child("currentTime").getValue(Long.class);
@@ -136,6 +173,7 @@ public class RanchActivity extends AppCompatActivity {
                     if (formattedDate.equals(date)) {
                         // The dates match
                         // Proceed with your logic
+                        model.setRanchHandName(ranchHandName);
                         model.setCowName(cowName);
                         model.setFeedNameOf(feedNameOf);
                         model.setQuantity(quantity);
@@ -178,5 +216,16 @@ public class RanchActivity extends AppCompatActivity {
             }
         }
         modelArrayList = new ArrayList<>();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // Uncheck all radio buttons
+        Rb1.setChecked(false);
+        Rb2.setChecked(false);
+        // Enable all radio buttons
+        Rb1.setEnabled(true);
+        Rb2.setEnabled(true);
     }
 }

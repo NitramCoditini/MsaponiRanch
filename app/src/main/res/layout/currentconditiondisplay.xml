@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_height="150dp">
+    android:layout_height="200dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="350dp"
@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:padding="2dp"
                 android:layout_height="wrap_content"
-                android:text="Ranch hand fed name"
+                android:text="Ranch hand name"
                 android:layout_gravity="center"
                 android:textSize="18sp"
                 android:textColor="@color/black" />
@@ -40,11 +40,11 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/cowFedName"
+                android:id="@+id/cowConditionName"
                 android:layout_width="wrap_content"
                 android:padding="2dp"
                 android:layout_height="wrap_content"
-                android:text="Cow fed name"
+                android:text="Cow name"
                 android:textSize="18sp"
                 android:textColor="@color/black" />
 
@@ -64,17 +64,17 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/iconsfoodbar"
+                    android:src="@drawable/iconstemperature"
                     android:padding="5dp"/>
 
 
 
 
             <TextView
-                android:id="@+id/feedFedName"
+                android:id="@+id/tempName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Feed fed"
+                android:text="Temperature"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:textSize="18sp"
@@ -92,16 +92,16 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/iconsweight"
+                    android:src="@drawable/iconsstomach"
                     android:padding="5dp"/>
 
             <TextView
-                android:id="@+id/feedFedWeight"
+                android:id="@+id/appeName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:text="feed weight"
+                android:text="Appetite"
                 android:textSize="18sp"
                 android:textColor="@color/black" />
 
@@ -116,15 +116,15 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/baseline_calendar_month_24"
+                    android:src="@drawable/iconscow"
                     android:padding="5dp"/>
 
             <TextView
-                android:id="@+id/feedFedDate"
+                android:id="@+id/genName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="feed date"
+                android:text="General appearance"
                 android:textSize="18sp"
                 android:textColor="@color/black"/>
 

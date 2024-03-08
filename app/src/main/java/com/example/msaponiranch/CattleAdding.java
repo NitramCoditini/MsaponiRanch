@@ -131,7 +131,7 @@ public class CattleAdding extends AppCompatActivity {
                     return;
                 }
                 if (TextUtils.isEmpty(cowweight)) {
-                    cowbr.setError("Cattle weight is required!");
+                    cowWe.setError("Cattle weight is required!");
                     return;
                 }
 

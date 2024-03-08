@@ -1,7 +1,10 @@
 package com.example.msaponiranch.ManagerStuff;
 
 public class FeedRecDetail {
+    public String ranchHandName;
     public String cowName;
+
+
     public String feedNameOf;
     public Double quantity;
     public Long currentTime;
@@ -9,11 +12,20 @@ public class FeedRecDetail {
     public FeedRecDetail() {
     }
 
-    public FeedRecDetail(String cowName, String feedNameOf, Double quantity, Long currentTime) {
+    public FeedRecDetail(String ranchHandName, String cowName, String feedNameOf, Double quantity, Long currentTime) {
+        this.ranchHandName = ranchHandName;
         this.cowName = cowName;
         this.feedNameOf = feedNameOf;
         this.quantity = quantity;
         this.currentTime = currentTime;
+    }
+
+    public String getRanchHandName() {
+        return ranchHandName;
+    }
+
+    public void setRanchHandName(String ranchHandName) {
+        this.ranchHandName = ranchHandName;
     }
 
     public String getCowName() {

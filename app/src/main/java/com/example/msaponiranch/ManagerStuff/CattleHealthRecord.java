@@ -238,28 +238,27 @@ public class CattleHealthRecord extends AppCompatActivity {
             return;
         }
 
-        DatabaseReference databaseReference1 = firebaseDatabase.getInstance().getReference("Health Record");
+        DatabaseReference cowRef = firebaseDatabase.getInstance().getReference("Health Record").child(selectedCowName);
 
-        // Create a HashMap to store health record data
-        HashMap<String, String> healthRecordMap = new HashMap<>();
-        healthRecordMap.put("cow name", selectedCowName);
-        healthRecordMap.put("administration process", combinedVaccination);
-        healthRecordMap.put("date administered", enteredDate);
-        healthRecordMap.put("dosage instruction", dosageInstruction);
-        healthRecordMap.put("dosage amount", dosageAmount);
+        // Prepare the data to be uploaded
+        HashMap<String, Object> cowData = new HashMap<>();
+        cowData.put("name", selectedCowName); // Add the cow name as a field
 
-        // Push data to the Realtime Database
-        databaseReference1.push().setValue(healthRecordMap, new DatabaseReference.CompletionListener() {
+        // Nested data for administration
+        HashMap<String, Object> administrationData = new HashMap<>();
+        administrationData.put("date administered", enteredDate);
+        administrationData.put("dosage instruction", dosageInstruction);
+        administrationData.put("dosage amount", dosageAmount);
+
+        // Add the administration data under the "administration" node
+        cowRef.child("administration").child(combinedVaccination).setValue(administrationData, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 if (error != null) {
-                    /* **Handle database write error** */
-
-                    Log.w("failure", "Failed to save health record to database", error.toException()); // Use a meaningful TAG for logging
+                    Log.w("failure", "Failed to save health record to database", error.toException());
                     Toast.makeText(CattleHealthRecord.this, "An error occurred while saving health record. Please try again.", Toast.LENGTH_LONG).show();
                 } else {
-                    /* **Handle successful database write** */
-                    Log.d("failure", "Health record saved successfully to database: " + ref.getKey()); // Log the generated record ID
+                    Log.d("success", "Health record saved successfully to database: " + ref.getKey());
                     Toast.makeText(CattleHealthRecord.this, "Health record saved successfully!", Toast.LENGTH_SHORT).show();
 
                     // Optionally clear form fields for a better user experience
@@ -270,6 +269,19 @@ public class CattleHealthRecord extends AppCompatActivity {
                 }
             }
         });
+
+        // Separately update the cow's name if it doesn't exist or needs to be updated
+        cowRef.updateChildren(cowData, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if (error != null) {
+                    Log.w("failure", "Failed to update cow name", error.toException());
+                } else {
+                    Log.d("success", "Cow name updated successfully: " + ref.getKey());
+                }
+            }
+        });
+
 
 
 

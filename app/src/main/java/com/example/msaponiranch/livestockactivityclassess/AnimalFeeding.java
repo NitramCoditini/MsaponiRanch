@@ -22,14 +22,23 @@ import com.example.msaponiranch.CattleDetail;
 import com.example.msaponiranch.InventoryStuff.RanchHandInventoryAdding;
 import com.example.msaponiranch.ManagerStuff.FeedRecDetail;
 import com.example.msaponiranch.R;
+import com.example.msaponiranch.RanchHandActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,8 +55,15 @@ public class AnimalFeeding extends AppCompatActivity {
 
     Button feeding;
 
+    FirebaseFirestore fStore;
+
+    FirebaseAuth mAuth;
+    String uid;
+
+    FirebaseUser currentUser;
+
     CardView cardView, recommendationCardView;
-    TextView tvN,tvW,tvA,tvB,tvG,feed1, instru, feed2, feed3,feed4,feed5;
+    TextView tvN,tvW,tvA,tvB,tvG,feed1, instru, feed2, feed3,feed4,feed5,nm;
     LinearLayout line1;
 
     @Override
@@ -69,11 +85,21 @@ public class AnimalFeeding extends AppCompatActivity {
         feed3 = findViewById(R.id.feed3Details);
         feed4 = findViewById(R.id.feed4Details);
         feed5 = findViewById(R.id.feed5Details);
+        nm = findViewById(R.id.nameWorker);
+
+
 
         recommendationCardView = findViewById(R.id.cardFeed);
         rb1 = findViewById(R.id.invradioButton1);
         instru = findViewById(R.id.nameSubtract);
         line1 = findViewById(R.id.linearcard);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        currentUser = mAuth.getCurrentUser();
+
+        fStore = FirebaseFirestore.getInstance();
+        uid = currentUser.getUid();
 
 
 
@@ -108,6 +134,7 @@ public class AnimalFeeding extends AppCompatActivity {
                 return true;
             }
         });
+
         rb1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,10 +146,36 @@ public class AnimalFeeding extends AppCompatActivity {
             }
         });
 
+
+
         feeding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                performFeedLogic();
+                DocumentReference userRef = fStore.collection("Msaponi ranch workers").document(uid);
+                userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null && document.exists()) {
+                                String RanchHandnm = document.getString("Full name");
+                                nm.setText(RanchHandnm);
+
+
+                                performFeedLogic();
+
+
+                            } else {
+                                Toast.makeText(AnimalFeeding.this, "No such document", Toast.LENGTH_SHORT).show();
+
+                            }
+                        } else {
+                            Toast.makeText(AnimalFeeding.this, "Error getting documents: ", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
 
             }
         });
@@ -378,6 +431,7 @@ public class AnimalFeeding extends AppCompatActivity {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 // Assuming the TextView displays "Maize germ: 2 kg\nWheat pollard: 3 kg"
                                                 // Process the text from the first TextView
+
                                                 processTextView(feed1.getText().toString());
 
                                                 // Process the text from the second TextView
@@ -385,6 +439,7 @@ public class AnimalFeeding extends AppCompatActivity {
                                                 processTextView(feed3.getText().toString());
                                                 processTextView(feed4.getText().toString());
                                                 processTextView(feed5.getText().toString());
+
 
                                             }
                                         })
@@ -458,10 +513,17 @@ public class AnimalFeeding extends AppCompatActivity {
             }
         }
 
+
+        String ranchHandName = nm.getText().toString();
+
+
+
         DatabaseReference feedMadeRef = databaseReference.child("feedMade");
 
         // Generate a unique key for the feed entry using push()
-        FeedRecDetail feedRecDetail = new FeedRecDetail(cowName,feedNameOf,quantity,currentTime);
+
+
+        FeedRecDetail feedRecDetail = new FeedRecDetail(ranchHandName,cowName,feedNameOf,quantity,currentTime);
         String feedEntryKey = feedMadeRef.push().getKey();
 
 

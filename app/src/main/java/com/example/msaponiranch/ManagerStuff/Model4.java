@@ -1,6 +1,8 @@
 package com.example.msaponiranch.ManagerStuff;
 
 public class Model4 {
+
+    public String ranchHandName;
     public String cowName;
     public String feedNameOf;
     public Double quantity;
@@ -9,11 +11,20 @@ public class Model4 {
     public Model4() {
     }
 
-    public Model4(String cowName, String feedNameOf, Double quantity, Long currentTime) {
+    public Model4(String ranchHandName, String cowName, String feedNameOf, Double quantity, Long currentTime) {
+        this.ranchHandName = ranchHandName;
         this.cowName = cowName;
         this.feedNameOf = feedNameOf;
         this.quantity = quantity;
         this.currentTime = currentTime;
+    }
+
+    public String getRanchHandName() {
+        return ranchHandName;
+    }
+
+    public void setRanchHandName(String ranchHandName) {
+        this.ranchHandName = ranchHandName;
     }
 
     public String getCowName() {

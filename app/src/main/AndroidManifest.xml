@@ -2,9 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MsaponiRanch"
         tools:targetApi="31">
+        <activity
+            android:name=".ManagerStuff.CattleCondition"
+            android:exported="false" />
+        <activity
+            android:name=".ManagerStuff.TaskAssigning"
+            android:exported="false" />
         <activity
             android:name=".ManagerStuff.CattleHealthRecord"
             android:exported="false" />

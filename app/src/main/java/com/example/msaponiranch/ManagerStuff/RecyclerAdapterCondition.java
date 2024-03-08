@@ -16,16 +16,16 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class RecyclerAdapter4 extends RecyclerView.Adapter<RecyclerAdapter4.viewHolder> {
+public class RecyclerAdapterCondition extends RecyclerView.Adapter<RecyclerAdapterCondition.viewHolder> {
 
     private static final String Tag = "RecyclerView";
     private Context mcontext;
-    private ArrayList<Model4> modelArrayList;
+    private ArrayList<ModelCondition> modelArrayList;
 
 
 
 
-    public RecyclerAdapter4(Context mcontext, ArrayList<Model4> modelArrayList) {
+    public RecyclerAdapterCondition(Context mcontext, ArrayList<ModelCondition> modelArrayList) {
         this.mcontext = mcontext;
         this.modelArrayList = modelArrayList;
     }
@@ -36,7 +36,7 @@ public class RecyclerAdapter4 extends RecyclerView.Adapter<RecyclerAdapter4.view
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view  = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.feedmadedisplay, parent, false);
+                .inflate(R.layout.currentconditiondisplay, parent, false);
 
 
 
@@ -47,19 +47,11 @@ public class RecyclerAdapter4 extends RecyclerView.Adapter<RecyclerAdapter4.view
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        holder.textView2.setText(modelArrayList.get(position).getCowName());
-        holder.textView3.setText(modelArrayList.get(position).getFeedNameOf());
+        holder.textView2.setText(modelArrayList.get(position).getCowname1());
+        holder.textView3.setText(modelArrayList.get(position).getCowappetite());
+        holder.textView4.setText(modelArrayList.get(position).getCowtemperature());
+        holder.textView5.setText(modelArrayList.get(position).getCowappearance());
         holder.textView6.setText(modelArrayList.get(position).getRanchHandName());
-        // Format quantity with a maximum of 2 decimal places and append "kg"
-        String quantityText = String.format("%.2f kg", modelArrayList.get(position).getQuantity());
-        holder.textView4.setText(quantityText);
-
-        // Convert current time from milliseconds to a human-readable format (e.g., "4:35 PM, Jul 15, 2024")
-        String currentTimeText = DateFormat.getDateTimeInstance().format(new Date(modelArrayList.get(position).getCurrentTime()));
-        holder.textView5.setText(currentTimeText);
-
-
-
 
 
     }
@@ -76,10 +68,10 @@ public class RecyclerAdapter4 extends RecyclerView.Adapter<RecyclerAdapter4.view
 
         public viewHolder(@NonNull View itemView) {
             super(itemView);
-            textView2 = itemView.findViewById(R.id.cowFedName);
-            textView3 = itemView.findViewById(R.id.feedFedName);
-            textView4 = itemView.findViewById(R.id.feedFedWeight);
-            textView5 = itemView.findViewById(R.id.feedFedDate);
+            textView2 = itemView.findViewById(R.id.cowConditionName);
+            textView3 = itemView.findViewById(R.id.appeName);
+            textView4 = itemView.findViewById(R.id.tempName);
+            textView5 = itemView.findViewById(R.id.genName);
             textView6 = itemView.findViewById(R.id.ranchHandFedName);
 
         }
