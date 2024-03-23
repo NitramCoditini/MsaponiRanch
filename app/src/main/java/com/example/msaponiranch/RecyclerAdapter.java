@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.msaponiranch.livestockactivityclassess.AnimalList;
+import com.example.msaponiranch.livestockactivityclassess.MilkingRecord;
 
 import java.util.ArrayList;
 
@@ -55,12 +57,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.viewHo
         holder.textView6.setText(modelArrayList.get(position).getAgeWithUnit());
 
 
-
+        String gender = modelArrayList.get(position).getGender();
 
         //image view: Glide library
         Glide.with(mcontext)
                 .load(modelArrayList.get(position).getImageId())
                 .into(holder.imageView);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (gender.equals("Female")) {
+
+                    String cowMilkedName = modelArrayList.get(position).getCowname();
+                    String cowMilkedBreed = modelArrayList.get(position).getCowbreed();
+
+                    // Create an Intent to start the MilkingRecord activity
+                    Intent intent = new Intent(view.getContext(), MilkingRecord.class);
+
+                    // Attach the cow's name and breed to the Intent
+                    intent.putExtra("cow_name_key", cowMilkedName);
+                    intent.putExtra("cow_breed_key", cowMilkedBreed);
+
+                    // Start the MilkingRecord activity
+                    view.getContext().startActivity(intent);
+
+                }else{
+                    Toast.makeText(mcontext, "You cannot milk a bull", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
 
         holder.help.setOnClickListener(new View.OnClickListener() {
@@ -101,4 +128,5 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.viewHo
 
         }
     }
+
 }

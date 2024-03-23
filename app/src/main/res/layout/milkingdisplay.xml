@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_height="200dp">
+    android:layout_height="150dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="350dp"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:cardBackgroundColor="#FFFFFF"
@@ -23,11 +24,11 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/ranchHandFedName"
+                android:id="@+id/ranchHandMilkName"
                 android:layout_width="wrap_content"
                 android:padding="2dp"
                 android:layout_height="wrap_content"
-                android:text="Ranch hand name"
+                android:text="Ranch hand fed name"
                 android:layout_gravity="center"
                 android:textSize="18sp"
                 android:textColor="@color/black" />
@@ -36,14 +37,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#E3D0D9"
-            android:padding="2dp"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/cowConditionName"
+                android:id="@+id/cowMilkName"
                 android:layout_width="wrap_content"
                 android:padding="2dp"
+                android:layout_marginStart="2dp"
                 android:layout_height="wrap_content"
                 android:text="Cow name"
                 android:textSize="18sp"
@@ -65,17 +66,17 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/iconstemperature"
+                    android:src="@drawable/iconscowbreed"
                     android:padding="5dp"/>
 
 
 
 
             <TextView
-                android:id="@+id/tempName"
+                android:id="@+id/cowMilkBreed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Temperature"
+                android:text="Cow breed"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:textSize="18sp"
@@ -93,16 +94,16 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/iconsstomach"
+                    android:src="@drawable/iconsweight"
                     android:padding="5dp"/>
 
             <TextView
-                android:id="@+id/appeName"
+                android:id="@+id/milkSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:text="Appetite"
+                android:text="Milk size"
                 android:textSize="18sp"
                 android:textColor="@color/black" />
 
@@ -117,15 +118,15 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/iconscow"
+                    android:src="@drawable/baseline_calendar_month_24"
                     android:padding="5dp"/>
 
             <TextView
-                android:id="@+id/genName"
+                android:id="@+id/milkDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="General appearance"
+                android:text="Milking date"
                 android:textSize="18sp"
                 android:textColor="@color/black"/>
 

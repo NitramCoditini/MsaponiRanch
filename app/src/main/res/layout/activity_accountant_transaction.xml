@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".AccountantTransactionActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -87,10 +96,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Click first time delay"
+            android:text="Click time delay first"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:fontFamily="@font/sagewebfont"
+            android:fontFamily="@font/poppinsregular"
             android:textColor="#FF0000"
             android:textSize="15sp" />
 
@@ -183,6 +192,17 @@
             android:textSize="26sp"
             android:layout_gravity="center" />
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_height="50dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/baseline_calendar_month_24"
+            android:id="@+id/dateImage"/>
+
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/purchaseRecyclerView"
             android:layout_width="match_parent"
@@ -196,5 +216,6 @@
 
 
     </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

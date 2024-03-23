@@ -115,8 +115,21 @@ public class AnimalFeeding extends AppCompatActivity {
                 if (searchQuery.isEmpty()) {
                     // Show a custom message or toast indicating an empty search
                     Toast.makeText(AnimalFeeding.this, "Please enter a search query", Toast.LENGTH_SHORT).show();
+
                     return true;
                 }
+                retrivedString(new OnDescriptionProcessedListener() {
+                    @Override
+                    public void onDescriptionProcessed(String processedDescription) {
+
+                        if (searchQuery.equals(processedDescription)) {
+                            // The search query matches the processed description, perform your action here
+                            // For example, navigate to another activity or update the UI
+                            taskProgress();
+
+                        }
+                    }
+                });
                 Query databaseQuery = databaseReference.child("CattleDetails").orderByChild("cowname").equalTo(searchQuery);
 
 
@@ -163,6 +176,7 @@ public class AnimalFeeding extends AppCompatActivity {
 
 
                                 performFeedLogic();
+                                taskProgress1();
 
 
                             } else {
@@ -439,6 +453,7 @@ public class AnimalFeeding extends AppCompatActivity {
                                                 processTextView(feed3.getText().toString());
                                                 processTextView(feed4.getText().toString());
                                                 processTextView(feed5.getText().toString());
+                                                Toast.makeText(AnimalFeeding.this, "Feed details saved successfully and sent to the manager", Toast.LENGTH_SHORT).show();
 
 
                                             }
@@ -508,55 +523,13 @@ public class AnimalFeeding extends AppCompatActivity {
 
                 // Update the quantity in the Firebase Realtime Database
                 // User confirmed, proceed with updating the feed quantity
+
                 updateFeedQuantity(feedNameOf, quantity);
+                addFeedInformationToDatabase(feedNameOf, quantity, cowName, currentTime);
 
             }
         }
 
-
-        String ranchHandName = nm.getText().toString();
-
-
-
-        DatabaseReference feedMadeRef = databaseReference.child("feedMade");
-
-        // Generate a unique key for the feed entry using push()
-
-
-        FeedRecDetail feedRecDetail = new FeedRecDetail(ranchHandName,cowName,feedNameOf,quantity,currentTime);
-        String feedEntryKey = feedMadeRef.push().getKey();
-
-
-
-        // Save the data to the "feedMade" node with the generated key
-        feedMadeRef.child(feedEntryKey).setValue(feedRecDetail)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-
-                        // Clear displayed information after successful save
-                        feed1.setText("");
-                        feed2.setText("");
-                        feed3.setText("");
-                        feed4.setText("");
-                        feed5.setText("");
-                        imageView.setImageURI(null);
-
-                        tvN.setText("Cow Name");
-                        tvW.setText("Cow weight");
-                        tvA.setText("Cow Age");
-                        tvG.setText("Cow gender");
-                        tvB.setText("Cow breed");
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("FeedMade", "Error saving feed details: " + e.getMessage());
-                        Toast.makeText(AnimalFeeding.this, "Failed to save feed details, please try again.", Toast.LENGTH_SHORT).show();
-                    }
-                });
 
 
     }
@@ -572,26 +545,28 @@ public class AnimalFeeding extends AppCompatActivity {
                     if (currentFeedName != null && currentFeedName.equals(feedNameOf)) {
                         String currentWeightString = feedSnapshot.child("feedWeight").getValue(String.class);
                         if (currentWeightString != null) {
-                            if (currentWeightString.equals("0kg")) {
-                                // Show a Toast message indicating the feed has 0kg
-                                Toast.makeText(getApplicationContext(), feedNameOf + " is now 0kg. Please contact accountant to add feed", Toast.LENGTH_SHORT).show();
+                            // Check if the current weight is not 0kg and quantityUsed is greater than 0
+                            if (!currentWeightString.equals("0kg") && quantityUsed > 0) {
+                                float currentWeight = Float.parseFloat(currentWeightString.replaceAll("[^0-9.]", "")); // Remove non-numeric characters
+                                float updatedWeight = currentWeight - (float) quantityUsed;
+                                if (updatedWeight == 0) {
+                                    // Show a Toast message indicating the feed has 0kg
+                                    Toast.makeText(getApplicationContext(), feedNameOf + " is now 0kg. Please contact accountant to add feed", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Check if the updated weight is 0kg
+                                    String updatedWeightString = String.format("%.2fkg", updatedWeight);
+
+                                    // Update the value in the database
+                                    feedSnapshot.getRef().child("feedWeight").setValue(updatedWeightString);
+                                    // Initialize both TextViews to an empty string or a placeholder
+
+                                    taskProgress2();
+
+                                }
+                            } else {
+                                // Handle the case where the feed weight is 0kg or quantityUsed is 0
+                                Toast.makeText(getApplicationContext(), "Cannot update feed quantity for " + feedNameOf + ". Feed weight is 0kg or quantity used is 0.", Toast.LENGTH_SHORT).show();
                             }
-                            float currentWeight = Float.parseFloat(currentWeightString.replaceAll("[^0-9.]", "")); // Remove non-numeric characters
-                            float updatedWeight = currentWeight - (float) quantityUsed;
-                            // Check if the updated weight is 0kg
-                            if (updatedWeight == 0) {
-                                // Show a Toast message indicating the feed has 0kg
-                                Toast.makeText(getApplicationContext(), feedNameOf + " is now 0kg. Please contact accountant to add feed", Toast.LENGTH_SHORT).show();
-                            }
-                            String updatedWeightString = String.format("%.2fkg", updatedWeight);
-
-                            // Update the value in the database
-                            feedSnapshot.getRef().child("feedWeight").setValue(updatedWeightString);
-                            // Initialize both TextViews to an empty string or a placeholder
-
-                            Toast.makeText(AnimalFeeding.this, "Feed details saved successfully and sent to the manager", Toast.LENGTH_SHORT).show();
-
-
                         }
                     }
                 }
@@ -603,6 +578,244 @@ public class AnimalFeeding extends AppCompatActivity {
             }
         });
     }
+
+    public interface OnDescriptionProcessedListener {
+        void onDescriptionProcessed(String processedDescription);
+    }
+    private void retrivedString(OnDescriptionProcessedListener listener) {
+        String titleYours = "Feeding";
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot taskSnapshot : dataSnapshot.getChildren()) {
+                        if (titleYours.equals(taskSnapshot.child("title").getValue(String.class))) {
+                            String name = taskSnapshot.child("cowName").getValue(String.class);
+                            if (name != null) {
+                                String processedDescription = name;
+
+                                listener.onDescriptionProcessed(processedDescription);
+                            }
+                        }
+                    }
+                } else {
+                    Toast.makeText(AnimalFeeding.this, "No tasks found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors
+            }
+        });
+    }
+    private  void taskProgress(){
+        String titleYours = "Feeding";
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean taskFound = false;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Check if the task title matches "Feeding"
+                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
+                            // Retrieve the current progress value
+                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
+                            // Increment the progress value
+                            if(currentProgress == 10) {
+                                int newProgress = currentProgress + 30; // Assuming you want to increment by 10
+                                // Update the progress value only if it's not already at the desired value
+                                if (newProgress == 40) { // Assuming the maximum progress value is 100
+                                    snapshot.getRef().child("progressText").setValue(newProgress)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Task updated successfully
+                                                    Toast.makeText(AnimalFeeding.this, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                    // Navigate to AnimalFeeding activity
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update task
+                                                    Toast.makeText(AnimalFeeding.this, "Failed to update task progress", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors if needed
+                }
+            });
+        } else {
+            Toast.makeText(AnimalFeeding.this, "No signed in user", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+    private  void taskProgress1(){
+        String titleYours = "Feeding";
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean taskFound = false;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Check if the task title matches "Feeding"
+                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
+                            // Retrieve the current progress value
+                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
+                            // Increment the progress value
+                            if(currentProgress == 40) {
+                                int newProgress = currentProgress + 30; // Assuming you want to increment by 10
+                                // Update the progress value only if it's not already at the desired value
+                                if (newProgress == 70) { // Assuming the maximum progress value is 100
+                                    snapshot.getRef().child("progressText").setValue(newProgress)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Task updated successfully
+                                                    Toast.makeText(AnimalFeeding.this, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                    // Navigate to AnimalFeeding activity
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update task
+                                                    Toast.makeText(AnimalFeeding.this, "Failed to update task progress", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors if needed
+                }
+            });
+        } else {
+            Toast.makeText(AnimalFeeding.this, "No signed in user", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+    private  void taskProgress2(){
+        String titleYours = "Feeding";
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean taskFound = false;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Check if the task title matches "Feeding"
+                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
+                            // Retrieve the current progress value
+                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
+                            // Increment the progress value
+                            if(currentProgress == 70) {
+                                int newProgress = currentProgress + 30; // Assuming you want to increment by 10
+                                // Update the progress value only if it's not already at the desired value
+                                if (newProgress == 100) { // Assuming the maximum progress value is 100
+                                    snapshot.getRef().child("progressText").setValue(newProgress)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Task updated successfully
+                                                    Toast.makeText(AnimalFeeding.this, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                    // Navigate to AnimalFeeding activity
+
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update task
+                                                    Toast.makeText(AnimalFeeding.this, "Failed to update task progress", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors if needed
+                }
+            });
+        } else {
+            Toast.makeText(AnimalFeeding.this, "No signed in user", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+    private void addFeedInformationToDatabase(String feedNameOf, double quantity, String cowName, long currentTime) {
+        String ranchHandName = nm.getText().toString();
+        DatabaseReference feedMadeRef = databaseReference.child("feedMade");
+        FeedRecDetail feedRecDetail = new FeedRecDetail(ranchHandName, cowName, feedNameOf, quantity, currentTime);
+        String feedEntryKey = feedMadeRef.push().getKey();
+
+        feedMadeRef.child(feedEntryKey).setValue(feedRecDetail)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        // Clear displayed information after successful save
+                        feed1.setText("");
+                        feed2.setText("");
+                        feed3.setText("");
+                        feed4.setText("");
+                        feed5.setText("");
+                        imageView.setImageURI(null);
+
+                        tvN.setText("Cow Name");
+                        tvW.setText("Cow weight");
+                        tvA.setText("Cow Age");
+                        tvG.setText("Cow gender");
+                        tvB.setText("Cow breed");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("FeedMade", "Error saving feed details: " + e.getMessage());
+                        Toast.makeText(AnimalFeeding.this, "Failed to save feed details, please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
 
 
 

@@ -204,6 +204,18 @@ public class HealthActivity extends AppCompatActivity {
                     Toast.makeText(HealthActivity.this, "Please enter a search query", Toast.LENGTH_SHORT).show();
                     return true;
                 }
+                retrivedString(new AnimalFeeding.OnDescriptionProcessedListener() {
+                    @Override
+                    public void onDescriptionProcessed(String processedDescription) {
+
+                        if (searchQuery.equals(processedDescription)) {
+                            // The search query matches the processed description, perform your action here
+                            // For example, navigate to another activity or update the UI
+                            taskProgress();
+
+                        }
+                    }
+                });
                 Query databaseQuery = databaseReference.child("Health Record").orderByChild("name").equalTo(searchQuery);
 
 
@@ -234,6 +246,7 @@ public class HealthActivity extends AppCompatActivity {
                     temp.setVisibility(View.GONE);
                     ape.setVisibility(View.GONE);
                     gen.setVisibility(View.GONE);
+                    taskProgress1();
 
                 }
 
@@ -254,6 +267,7 @@ public class HealthActivity extends AppCompatActivity {
                     gen.setVisibility(View.VISIBLE);
                     call.setVisibility(View.VISIBLE);
                     fabPhone.setVisibility(View.VISIBLE);
+                    taskProgress2();
 
 
                 }
@@ -422,8 +436,10 @@ public class HealthActivity extends AppCompatActivity {
                                     Rb1.setEnabled(false);
                                     Rb2.setEnabled(false);
                                     messageView.setVisibility(View.VISIBLE);
+                                    messageView1.setVisibility(View.VISIBLE);
                                     admDose.setVisibility(View.VISIBLE);
-                                    messageView.setText("Please vaccinate " + cowId + " with\n" + processName);
+                                    messageView.setText("Please vaccinate " + cowId + " with");
+                                    messageView1.setText(processName);
                                     txLayout.setVisibility(View.VISIBLE);
                                 }
                             }
@@ -455,8 +471,10 @@ public class HealthActivity extends AppCompatActivity {
                                 Rb1.setEnabled(false);
                                 Rb2.setEnabled(false);
                                 messageView.setVisibility(View.VISIBLE);
+                                messageView1.setVisibility(View.VISIBLE);
                                 admDose.setVisibility(View.VISIBLE);
-                                messageView.setText("Please vaccinate " + cowId + " with\n" + processName);
+                                messageView.setText("Please vaccinate " + cowId + " with");
+                                messageView1.setText(processName);
                                 txLayout.setVisibility(View.VISIBLE);
                             }
 
@@ -486,8 +504,10 @@ public class HealthActivity extends AppCompatActivity {
                                 Rb1.setEnabled(false);
                                 Rb2.setEnabled(false);
                                 messageView.setVisibility(View.VISIBLE);
+                                messageView1.setVisibility(View.VISIBLE);
                                 admDose.setVisibility(View.VISIBLE);
-                                messageView.setText("Please vaccinate " + cowId + " with\n" + processName);
+                                messageView.setText("Please spray " + cowId + " with");
+                                messageView1.setText(processName);
                                 txLayout.setVisibility(View.VISIBLE);
                             }
 
@@ -518,8 +538,10 @@ public class HealthActivity extends AppCompatActivity {
                                 Rb1.setEnabled(false);
                                 Rb2.setEnabled(false);
                                 messageView.setVisibility(View.VISIBLE);
+                                messageView1.setVisibility(View.VISIBLE);
                                 admDose.setVisibility(View.VISIBLE);
-                                messageView.setText("Please vaccinate " + cowId + " with\n" + processName);
+                                messageView.setText("Please deworm " + cowId + " with");
+                                messageView1.setText(processName);
                                 txLayout.setVisibility(View.VISIBLE);
                             }
 
@@ -600,6 +622,7 @@ public class HealthActivity extends AppCompatActivity {
                         ape.setText("");
                         gen.setText("");
                         Rb2.setChecked(false);
+                        taskProgress3();
 
 
 
@@ -625,6 +648,263 @@ public class HealthActivity extends AppCompatActivity {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    public interface OnDescriptionProcessedListener {
+        void onDescriptionProcessed(String processedDescription);
+    }
+    private void retrivedString(AnimalFeeding.OnDescriptionProcessedListener listener) {
+        String titleYours = "Health";
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot taskSnapshot : dataSnapshot.getChildren()) {
+                        if (titleYours.equals(taskSnapshot.child("title").getValue(String.class))) {
+                            String name = taskSnapshot.child("cowName").getValue(String.class);
+                            if (name != null) {
+                                String processedDescription = name;
+
+                                listener.onDescriptionProcessed(processedDescription);
+                            }
+                        }
+                    }
+                } else {
+                    Toast.makeText(HealthActivity.this, "No tasks found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors
+            }
+        });
+    }
+    private  void taskProgress(){
+        String titleYours = "Health";
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Check if the task title matches "Feeding"
+                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
+                            // Retrieve the current progress value
+                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
+                            // Increment the progress value
+                            if(currentProgress == 10) {
+                                int newProgress = currentProgress + 30; // Assuming you want to increment by 10
+                                // Update the progress value only if it's not already at the desired value
+                                if (newProgress == 40) { // Assuming the maximum progress value is 100
+                                    snapshot.getRef().child("progressText").setValue(newProgress)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Task updated successfully
+                                                    Toast.makeText(HealthActivity.this, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                    // Navigate to AnimalFeeding activity
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update task
+                                                    Toast.makeText(HealthActivity.this, "Failed to update task progress", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors if needed
+                }
+            });
+        } else {
+            Toast.makeText(HealthActivity.this, "No signed in user", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+    private  void taskProgress1(){
+        String titleYours = "Health";
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean taskFound = false;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Check if the task title matches "Feeding"
+                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
+                            // Retrieve the current progress value
+                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
+                            // Increment the progress value
+                            if(currentProgress == 40) {
+                                int newProgress = currentProgress + 60; // Assuming you want to increment by 10
+                                // Update the progress value only if it's not already at the desired value
+                                if (newProgress == 100) { // Assuming the maximum progress value is 100
+                                    snapshot.getRef().child("progressText").setValue(newProgress)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Task updated successfully
+                                                    Toast.makeText(HealthActivity.this, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                    // Navigate to AnimalFeeding activity
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update task
+                                                    Toast.makeText(HealthActivity.this, "Failed to update task progress", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors if needed
+                }
+            });
+        } else {
+            Toast.makeText(HealthActivity.this, "No signed in user", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+    private  void taskProgress2(){
+        String titleYours = "Health";
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean taskFound = false;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Check if the task title matches "Feeding"
+                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
+                            // Retrieve the current progress value
+                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
+                            // Increment the progress value
+                            if(currentProgress == 40) {
+                                int newProgress = currentProgress + 30; // Assuming you want to increment by 10
+                                // Update the progress value only if it's not already at the desired value
+                                if (newProgress == 70) { // Assuming the maximum progress value is 100
+                                    snapshot.getRef().child("progressText").setValue(newProgress)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Task updated successfully
+                                                    Toast.makeText(HealthActivity.this, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                    // Navigate to AnimalFeeding activity
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update task
+                                                    Toast.makeText(HealthActivity.this, "Failed to update task progress", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors if needed
+                }
+            });
+        } else {
+            Toast.makeText(HealthActivity.this, "No signed in user", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+    private  void taskProgress3(){
+        String titleYours = "Health";
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean taskFound = false;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Check if the task title matches "Feeding"
+                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
+                            // Retrieve the current progress value
+                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
+                            // Increment the progress value
+                            if(currentProgress == 70) {
+                                int newProgress = currentProgress + 30; // Assuming you want to increment by 10
+                                // Update the progress value only if it's not already at the desired value
+                                if (newProgress == 100) { // Assuming the maximum progress value is 100
+                                    snapshot.getRef().child("progressText").setValue(newProgress)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Task updated successfully
+                                                    Toast.makeText(HealthActivity.this, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                    // Navigate to AnimalFeeding activity
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update task
+                                                    Toast.makeText(HealthActivity.this, "Failed to update task progress", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors if needed
+                }
+            });
+        } else {
+            Toast.makeText(HealthActivity.this, "No signed in user", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
 

@@ -48,11 +48,11 @@ public class RecyclerAdapter2 extends RecyclerView.Adapter<RecyclerAdapter2.view
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        holder.textView2.setText(modelArrayList.get(position).getTotalPriceStr());
+
         holder.textView3.setText(modelArrayList.get(position).getFeedName());
         holder.textView4.setText(modelArrayList.get(position).getFeedWeight());
         holder.textView5.setText(modelArrayList.get(position).getDate());
-
+        holder.textView2.setText(modelArrayList.get(position).getTotalPriceStr());
 
 
 

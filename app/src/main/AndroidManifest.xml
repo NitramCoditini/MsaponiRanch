@@ -22,6 +22,12 @@
         android:theme="@style/Theme.MsaponiRanch"
         tools:targetApi="31">
         <activity
+            android:name=".ManagerStuff.AssignmentTask"
+            android:exported="false" />
+        <activity
+            android:name=".livestockactivityclassess.MilkingRecord"
+            android:exported="false" />
+        <activity
             android:name=".ManagerStuff.CattleCondition"
             android:exported="false" />
         <activity

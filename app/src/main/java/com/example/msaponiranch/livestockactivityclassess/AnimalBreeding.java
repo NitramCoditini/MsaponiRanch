@@ -451,10 +451,12 @@ public class AnimalBreeding extends AppCompatActivity implements RecyclerAdapter
         if (pregnant.equals("pregnant")) {
             pregnantLayout.setVisibility(View.VISIBLE);
             deliveredLayout.setVisibility(View.GONE);
+            taskProgress();
 
         } else { // pregnant.equals("Just Delivered")
             pregnantLayout.setVisibility(View.GONE);
             deliveredLayout.setVisibility(View.VISIBLE);
+            taskProgress();
         }
 
     }
@@ -517,6 +519,7 @@ public class AnimalBreeding extends AppCompatActivity implements RecyclerAdapter
                         // Clear displayed information after successful save
                         cowP.setText("");
                         dateEditText.setText("");
+                        taskProgress1();
 
 
 
@@ -567,6 +570,7 @@ public class AnimalBreeding extends AppCompatActivity implements RecyclerAdapter
                         cowag.setText("");
                         cowWe.setText("");
                         pgb.setVisibility(View.GONE);
+                        taskProgress1();
                     }
                 });
 
@@ -586,5 +590,117 @@ public class AnimalBreeding extends AppCompatActivity implements RecyclerAdapter
         ContentResolver c = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return  mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
+    private  void taskProgress(){
+        String titleYours = "Breeding";
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Check if the task title matches "Feeding"
+                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
+                            // Retrieve the current progress value
+                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
+                            // Increment the progress value
+                            if(currentProgress == 10) {
+                                int newProgress = currentProgress + 30; // Assuming you want to increment by 10
+                                // Update the progress value only if it's not already at the desired value
+                                if (newProgress == 40) { // Assuming the maximum progress value is 100
+                                    snapshot.getRef().child("progressText").setValue(newProgress)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Task updated successfully
+                                                    Toast.makeText(AnimalBreeding.this, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                    // Navigate to AnimalFeeding activity
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update task
+                                                    Toast.makeText(AnimalBreeding.this, "Failed to update task progress", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors if needed
+                }
+            });
+        } else {
+            Toast.makeText(AnimalBreeding.this, "No signed in user", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+    private  void taskProgress1(){
+        String titleYours = "Breeding";
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean taskFound = false;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Check if the task title matches "Feeding"
+                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
+                            // Retrieve the current progress value
+                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
+                            // Increment the progress value
+                            if(currentProgress == 40) {
+                                int newProgress = currentProgress + 60; // Assuming you want to increment by 10
+                                // Update the progress value only if it's not already at the desired value
+                                if (newProgress == 100) { // Assuming the maximum progress value is 100
+                                    snapshot.getRef().child("progressText").setValue(newProgress)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Task updated successfully
+                                                    Toast.makeText(AnimalBreeding.this, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                    // Navigate to AnimalFeeding activity
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update task
+                                                    Toast.makeText(AnimalBreeding.this, "Failed to update task progress", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors if needed
+                }
+            });
+        } else {
+            Toast.makeText(AnimalBreeding.this, "No signed in user", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }
