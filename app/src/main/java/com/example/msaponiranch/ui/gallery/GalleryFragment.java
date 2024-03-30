@@ -84,7 +84,7 @@ public class GalleryFragment extends Fragment {
 
         return root;
     }
-    private  void taskProgress(){
+    private void taskProgress() {
         String titleYours = "Feeding";
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -94,50 +94,45 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     boolean taskFound = false;
+                    final boolean[] navigated = {false}; // Flag to track navigation
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        // Check if the task title matches "Feeding"
                         if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
                             taskFound = true;
-                            // Retrieve the current progress value
                             int currentProgress = snapshot.child("progressText").getValue(Integer.class);
 
-                            if(currentProgress == 0) {
-                                // Increment the progress value
-                                int newProgress = currentProgress + 10; // Assuming you want to increment by 10
-                                // Update the progress value only if it's not already at the desired value
+                            if (currentProgress == 0) {
+                                int newProgress = currentProgress + 10; // Increment by 10
                                 if (newProgress == 10) { // Assuming the maximum progress value is 100
                                     snapshot.getRef().child("progressText").setValue(newProgress)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    // Task updated successfully
-                                                    Toast.makeText(getActivity(), "Task progress updated successfully", Toast.LENGTH_SHORT).show();
-                                                    // Navigate to AnimalFeeding activity
-                                                    Intent i = new Intent(getActivity(), AnimalFeeding.class);
-                                                    startActivity(i);
+                                                    if (!navigated[0]) { // Check if already navigated
+                                                        Toast.makeText(getActivity(), "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                        Intent i = new Intent(getActivity(), AnimalFeeding.class);
+                                                        startActivity(i);
+                                                        navigated[0] = true; // Set flag to true after navigation
+                                                    }
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    // Failed to update task
                                                     Toast.makeText(getActivity(), "Failed to update task progress", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 }
-                            }else {
-                                // Progress value is already at the maximum, navigate directly to AnimalFeeding activity
-                                Intent i = new Intent(getActivity(), AnimalFeeding.class);
-                                startActivity(i);
+                            } else {
+                                if (!navigated[0]) { // Check if already navigated
+                                    Intent i = new Intent(getActivity(), AnimalFeeding.class);
+                                    startActivity(i);
+                                    navigated[0] = true; // Set flag to true after navigation
+                                }
                             }
                         }
                     }
-                    // If no task with title "Feeding" was found, show a message or navigate to a different activity
                     if (!taskFound) {
                         Toast.makeText(getActivity(), "Access denied. Please check your assigned task for today", Toast.LENGTH_SHORT).show();
-                        // Optionally, navigate to a different activity or page
-                        // Intent i = new Intent(getActivity(), SomeOtherActivity.class);
-                        // startActivity(i);
                     }
                 }
 
@@ -149,10 +144,9 @@ public class GalleryFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), "No signed in user", Toast.LENGTH_SHORT).show();
         }
-
-
     }
-    private  void taskProgress1(){
+
+    private void taskProgress1() {
         String titleYours = "Health";
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -162,50 +156,45 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     boolean taskFound = false;
+                    final boolean[] navigated = {false}; // Flag to track navigation
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        // Check if the task title matches "Feeding"
                         if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
                             taskFound = true;
-                            // Retrieve the current progress value
                             int currentProgress = snapshot.child("progressText").getValue(Integer.class);
 
-                            if(currentProgress == 0) {
-                                // Increment the progress value
-                                int newProgress = currentProgress + 10; // Assuming you want to increment by 10
-                                // Update the progress value only if it's not already at the desired value
+                            if (currentProgress == 0) {
+                                int newProgress = currentProgress + 10; // Increment by 10
                                 if (newProgress == 10) { // Assuming the maximum progress value is 100
                                     snapshot.getRef().child("progressText").setValue(newProgress)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    // Task updated successfully
-                                                    Toast.makeText(getActivity(), "Task progress updated successfully", Toast.LENGTH_SHORT).show();
-                                                    // Navigate to AnimalFeeding activity
-                                                    Intent i = new Intent(getActivity(), HealthActivity.class);
-                                                    startActivity(i);
+                                                    if (!navigated[0]) { // Check if already navigated
+                                                        Toast.makeText(getActivity(), "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                        Intent i = new Intent(getActivity(), HealthActivity.class);
+                                                        startActivity(i);
+                                                        navigated[0] = true; // Set flag to true after navigation
+                                                    }
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    // Failed to update task
                                                     Toast.makeText(getActivity(), "Failed to update task progress", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 }
-                            }else {
-                                // Progress value is already at the maximum, navigate directly to AnimalFeeding activity
-                                Intent i = new Intent(getActivity(), HealthActivity.class);
-                                startActivity(i);
+                            } else {
+                                if (!navigated[0]) { // Check if already navigated
+                                    Intent i = new Intent(getActivity(), HealthActivity.class);
+                                    startActivity(i);
+                                    navigated[0] = true; // Set flag to true after navigation
+                                }
                             }
                         }
                     }
-                    // If no task with title "Feeding" was found, show a message or navigate to a different activity
                     if (!taskFound) {
                         Toast.makeText(getActivity(), "Access denied. Please check your assigned task for today", Toast.LENGTH_SHORT).show();
-                        // Optionally, navigate to a different activity or page
-                        // Intent i = new Intent(getActivity(), SomeOtherActivity.class);
-                        // startActivity(i);
                     }
                 }
 
@@ -217,10 +206,9 @@ public class GalleryFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), "No signed in user", Toast.LENGTH_SHORT).show();
         }
-
-
     }
-    private  void taskProgress2(){
+
+    private void taskProgress2() {
         String titleYours = "Breeding";
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -230,50 +218,45 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     boolean taskFound = false;
+                    final boolean[] navigated = {false}; // Flag to track navigation
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        // Check if the task title matches "Feeding"
                         if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
                             taskFound = true;
-                            // Retrieve the current progress value
                             int currentProgress = snapshot.child("progressText").getValue(Integer.class);
 
-                            if(currentProgress == 0) {
-                                // Increment the progress value
-                                int newProgress = currentProgress + 10; // Assuming you want to increment by 10
-                                // Update the progress value only if it's not already at the desired value
+                            if (currentProgress == 0) {
+                                int newProgress = currentProgress + 10; // Increment by 10
                                 if (newProgress == 10) { // Assuming the maximum progress value is 100
                                     snapshot.getRef().child("progressText").setValue(newProgress)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    // Task updated successfully
-                                                    Toast.makeText(getActivity(), "Task progress updated successfully", Toast.LENGTH_SHORT).show();
-                                                    // Navigate to AnimalFeeding activity
-                                                    Intent i = new Intent(getActivity(), AnimalBreeding.class);
-                                                    startActivity(i);
+                                                    if (!navigated[0]) { // Check if already navigated
+                                                        Toast.makeText(getActivity(), "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                        Intent i = new Intent(getActivity(), AnimalBreeding.class);
+                                                        startActivity(i);
+                                                        navigated[0] = true; // Set flag to true after navigation
+                                                    }
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    // Failed to update task
                                                     Toast.makeText(getActivity(), "Failed to update task progress", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 }
-                            }else {
-                                // Progress value is already at the maximum, navigate directly to AnimalFeeding activity
-                                Intent i = new Intent(getActivity(), AnimalBreeding.class);
-                                startActivity(i);
+                            } else {
+                                if (!navigated[0]) { // Check if already navigated
+                                    Intent i = new Intent(getActivity(), AnimalBreeding.class);
+                                    startActivity(i);
+                                    navigated[0] = true; // Set flag to true after navigation
+                                }
                             }
                         }
                     }
-                    // If no task with title "Feeding" was found, show a message or navigate to a different activity
                     if (!taskFound) {
                         Toast.makeText(getActivity(), "Access denied. Please check your assigned task for today", Toast.LENGTH_SHORT).show();
-                        // Optionally, navigate to a different activity or page
-                        // Intent i = new Intent(getActivity(), SomeOtherActivity.class);
-                        // startActivity(i);
                     }
                 }
 
@@ -285,10 +268,9 @@ public class GalleryFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), "No signed in user", Toast.LENGTH_SHORT).show();
         }
-
-
     }
-    private  void taskProgress3(){
+
+    private void taskProgress3() {
         String titleYours = "Milking";
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -298,50 +280,45 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     boolean taskFound = false;
+                    final boolean[] navigated = {false}; // Flag to track navigation
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        // Check if the task title matches "Feeding"
                         if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
                             taskFound = true;
-                            // Retrieve the current progress value
                             int currentProgress = snapshot.child("progressText").getValue(Integer.class);
 
-                            if(currentProgress == 0) {
-                                // Increment the progress value
-                                int newProgress = currentProgress + 25; // Assuming you want to increment by 10
-                                // Update the progress value only if it's not already at the desired value
-                                if (newProgress == 25) { // Assuming the maximum progress value is 100
+                            if (currentProgress == 0) {
+                                int newProgress = currentProgress + 10; // Increment by 10
+                                if (newProgress == 10) { // Assuming the maximum progress value is 100
                                     snapshot.getRef().child("progressText").setValue(newProgress)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    // Task updated successfully
-                                                    Toast.makeText(getActivity(), "Task progress updated successfully", Toast.LENGTH_SHORT).show();
-                                                    // Navigate to AnimalFeeding activity
-                                                    Intent i = new Intent(getActivity(), AnimalList.class);
-                                                    startActivity(i);
+                                                    if (!navigated[0]) { // Check if already navigated
+                                                        Toast.makeText(getActivity(), "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                        Intent i = new Intent(getActivity(), AnimalList.class);
+                                                        startActivity(i);
+                                                        navigated[0] = true; // Set flag to true after navigation
+                                                    }
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    // Failed to update task
                                                     Toast.makeText(getActivity(), "Failed to update task progress", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 }
-                            }else {
-                                // Progress value is already at the maximum, navigate directly to AnimalFeeding activity
-                                Intent i = new Intent(getActivity(), AnimalList.class);
-                                startActivity(i);
+                            } else {
+                                if (!navigated[0]) { // Check if already navigated
+                                    Intent i = new Intent(getActivity(), AnimalList.class);
+                                    startActivity(i);
+                                    navigated[0] = true; // Set flag to true after navigation
+                                }
                             }
                         }
                     }
-                    // If no task with title "Feeding" was found, show a message or navigate to a different activity
                     if (!taskFound) {
                         Toast.makeText(getActivity(), "Access denied. Please check your assigned task for today", Toast.LENGTH_SHORT).show();
-                        // Optionally, navigate to a different activity or page
-                        // Intent i = new Intent(getActivity(), SomeOtherActivity.class);
-                        // startActivity(i);
                     }
                 }
 
@@ -353,9 +330,8 @@ public class GalleryFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), "No signed in user", Toast.LENGTH_SHORT).show();
         }
-
-
     }
+
 
 
 }

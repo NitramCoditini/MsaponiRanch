@@ -623,6 +623,9 @@ public class HealthActivity extends AppCompatActivity {
                         gen.setText("");
                         Rb2.setChecked(false);
                         taskProgress3();
+                        temp.setVisibility(View.GONE);
+                        ape.setVisibility(View.GONE);
+                        gen.setVisibility(View.GONE);
 
 
 

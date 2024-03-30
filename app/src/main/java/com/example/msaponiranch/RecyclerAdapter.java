@@ -16,6 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.msaponiranch.livestockactivityclassess.AnimalList;
 import com.example.msaponiranch.livestockactivityclassess.MilkingRecord;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -24,6 +34,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.viewHo
     private static final String Tag = "RecyclerView";
     private Context mcontext;
     private ArrayList<Model> modelArrayList;
+
+    DatabaseReference databaseReference;
 
 
 
@@ -78,6 +90,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.viewHo
                     // Attach the cow's name and breed to the Intent
                     intent.putExtra("cow_name_key", cowMilkedName);
                     intent.putExtra("cow_breed_key", cowMilkedBreed);
+                    taskProgress();
 
                     // Start the MilkingRecord activity
                     view.getContext().startActivity(intent);
@@ -128,5 +141,63 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.viewHo
 
         }
     }
+    private  void taskProgress(){
+        String titleYours = "Milking";
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            databaseReference = FirebaseDatabase.getInstance().getReference();
+            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    boolean taskFound = false;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Check if the task title matches "Feeding"
+                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
+                            // Retrieve the current progress value
+                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
+                            // Increment the progress value
+                            if(currentProgress == 10) {
+                                int newProgress = currentProgress + 60; // Assuming you want to increment by 10
+                                // Update the progress value only if it's not already at the desired value
+                                if (newProgress == 70) { // Assuming the maximum progress value is 100
+                                    snapshot.getRef().child("progressText").setValue(newProgress)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Task updated successfully
+                                                    Toast.makeText(mcontext, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
+                                                    // Navigate to AnimalFeeding activity
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Failed to update task
+                                                    Toast.makeText(mcontext, "Failed to update task progress", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                } else {
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors if needed
+                }
+            });
+        } else {
+            Toast.makeText(mcontext, "No signed in user", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
 
 }

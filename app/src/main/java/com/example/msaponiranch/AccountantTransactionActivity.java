@@ -21,8 +21,11 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.msaponiranch.AccountantStuff.SoldItemDetail;
+import com.example.msaponiranch.ManagerStuff.CattleCondition;
 import com.example.msaponiranch.ManagerStuff.Model2;
 import com.example.msaponiranch.ManagerStuff.RecyclerAdapter2;
+import com.example.msaponiranch.ManagerStuff.RecyclerAdapterSales;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,17 +50,19 @@ import java.util.concurrent.TimeUnit;
 
 public class AccountantTransactionActivity extends AppCompatActivity {
 
-    RecyclerView.Adapter recyclerAdapter;
+    RecyclerView.Adapter recyclerAdapter, recyclerAdapterSales;
 
-    RecyclerView recyclerViewCategoryList2;
+    RecyclerView recyclerViewCategoryList2,recyclerViewCategoryListSales;
 
     ArrayList<Model2> modelArrayList;
+
+    ArrayList<SoldItemDetail> modelArrayListSales;
 
     Button update, tim;
 
     EditText addBud;
 
-    ImageView dateImage;
+    ImageView dateImage,dateS;
 
     TextView initial,remaining,disabledText;
 
@@ -65,7 +70,7 @@ public class AccountantTransactionActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
 
-    String selectedDate;
+
 
     String formattedMonth;
 
@@ -82,6 +87,14 @@ public class AccountantTransactionActivity extends AppCompatActivity {
         remaining = findViewById(R.id.remainingTitle);
         tim = findViewById(R.id.checkTimeDelay);
         dateImage = findViewById(R.id.dateImage);
+        dateS = findViewById(R.id.dateSalesImage);
+
+        dateS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMonthYearPicker1();
+            }
+        });
         dateImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +105,10 @@ public class AccountantTransactionActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewCategoryList2 = findViewById(R.id.purchaseRecyclerView);
         recyclerViewCategoryList2.setLayoutManager(linearLayoutManager);
+
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewCategoryListSales = findViewById(R.id.salesRecyclerView);
+        recyclerViewCategoryListSales.setLayoutManager(linearLayoutManager1);
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = firebaseDatabase.getInstance().getReference("Budget Details");
@@ -113,7 +130,10 @@ public class AccountantTransactionActivity extends AppCompatActivity {
             }
         });
 
+
+
         modelArrayList = new ArrayList<>();
+        modelArrayListSales = new ArrayList<>();
 
 
 
@@ -217,9 +237,81 @@ public class AccountantTransactionActivity extends AppCompatActivity {
                         formattedMonth = String.format("%02d", selectedMonth + 1); // Add 1 for actual month value
 
                         // Format full date (month/year)
-                        selectedDate = formattedMonth + "/" + selectedYear;
+                        String selectedDate = formattedMonth + "/" + selectedYear;
                         Log.d("DateConversion", "Formatted DateString: " + selectedDate);
                         getDataFromFirebase(selectedDate);
+
+
+                        // Handle selected month and full date (e.g., update UI, perform actions)
+                        // You can use "selectedMonth" and "selectedDate" for further processing
+
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Do nothing or handle the 'No' case as needed
+                    }
+                });
+
+
+        builder.setView(dialogView);
+        builder.create().show();
+    }
+    public void showMonthYearPicker1() {
+        final Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH); // 0-based indexing for month
+
+        final String[] months = getResources().getStringArray(R.array.months_array); // Replace with your months array resource
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AccountantTransactionActivity.this);
+
+
+        View dialogView = getLayoutInflater().inflate(R.layout.month_year_picker_dialog, null);
+
+        // Initialize views from custom layout (replace with your view IDs)
+        ImageView rightImageView = dialogView.findViewById(R.id.rightImage);
+        ImageView leftImageView = dialogView.findViewById(R.id.leftImage);
+        TextView yearTextView = dialogView.findViewById(R.id.year_text_view);
+        NumberPicker monthPicker = dialogView.findViewById(R.id.month_picker);
+
+
+        // Set year text
+        yearTextView.setText(String.valueOf(currentYear));
+
+        // Set up month picker
+        monthPicker.setMinValue(1);
+        monthPicker.setMaxValue(months.length);
+        monthPicker.setDisplayedValues(months);
+        monthPicker.setValue(currentMonth + 1); // Adjust for 0-based indexing
+
+        // Increase year button click listener
+        rightImageView.setOnClickListener(v -> {
+            int year = Integer.parseInt(yearTextView.getText().toString());
+            yearTextView.setText(String.valueOf(year + 1));
+        });
+
+        // Decrease year button click listener
+        leftImageView.setOnClickListener(v -> {
+            int year = Integer.parseInt(yearTextView.getText().toString());
+            if (year > 1900) { // Adjust minimum year as needed
+                yearTextView.setText(String.valueOf(year - 1));
+            }
+        });
+        builder.setTitle("Select Month & Year")
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        int selectedMonth = monthPicker.getValue() - 1; // Adjust for 0-based indexing
+                        int selectedYear = Integer.parseInt(yearTextView.getText().toString());
+
+                        // Format selected month as two-digit string
+                        formattedMonth = String.format("%02d", selectedMonth + 1); // Add 1 for actual month value
+
+                        // Format full date (month/year)
+                        String selectedDate = formattedMonth + "/" + selectedYear;
+                        Log.d("DateInto", "Formatted DateString: " + selectedDate);
+                        getDataFromFirebaseSales(selectedDate);
 
                         // Handle selected month and full date (e.g., update UI, perform actions)
                         // You can use "selectedMonth" and "selectedDate" for further processing
@@ -239,6 +331,82 @@ public class AccountantTransactionActivity extends AppCompatActivity {
     }
 
 
+    private void getDataFromFirebaseSales(String MonthYear1) {
+        Log.d("May1", "Fetching data from Firebase");
+        DatabaseReference soldItemsRef = FirebaseDatabase.getInstance().getReference("Sold Items Record");
+        Log.d("May1", "DatabaseReference created");
+
+
+
+        soldItemsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                        modelArrayListSales.clear();
+                        boolean foundMatch = false; // Flag to check if any matching record is found
+                        Log.d("May1", "DataSnapshot key: " + datasnapshot.getKey());
+                        Log.d("May1", "DataSnapshot value: " + datasnapshot.getValue());
+                        if (datasnapshot.exists()) {
+                        for (DataSnapshot snapshot : datasnapshot.getChildren()) {
+                            Log.d("May1", "Listener added");
+
+                            SoldItemDetail modelSale = new SoldItemDetail();
+
+                            String dateFire = snapshot.child("sdItemDate").getValue(String.class);
+                            modelSale.setSdItemDate(dateFire);
+                            modelSale.setSdItemName(snapshot.child("sdItemName").getValue(String.class));
+                            modelSale.setSdItemQuantity(snapshot.child("sdItemQuantity").getValue(String.class));
+                            modelSale.setSdItemTotal(snapshot.child("sdItemTotal").getValue(String.class)); // Correctly retrieve as Integer
+
+                            // Assuming you want to format the date for display or other purposes
+                            SimpleDateFormat inputFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                            SimpleDateFormat outputFormatter = new SimpleDateFormat("MM/yyyy", Locale.getDefault());
+
+
+                            try {
+                                Date date = inputFormatter.parse(dateFire);
+                                String formattedDateFire = outputFormatter.format(date);
+                                Log.d("DateInto", "Formatted: " + formattedDateFire);
+                                Log.d("DateInto", "Formatted new: " + MonthYear1);
+                                // Ensure selectedDate is correctly formatted and matches formattedDateFire
+                                if (formattedDateFire.equals(MonthYear1)) {
+                                    modelArrayListSales.add(modelSale);
+                                    foundMatch = true; // Set flag to true if a match is found
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                // Handle the exception
+                            }
+
+
+                        }
+
+                        Log.d("LIST_SIZE", "List size: " + modelArrayListSales.size());
+                        // After processing all the data, set the adapters to the RecyclerViews
+                        recyclerAdapterSales = new RecyclerAdapterSales(getApplicationContext(), modelArrayListSales);
+                        recyclerViewCategoryListSales.setAdapter(recyclerAdapterSales);
+                        recyclerAdapterSales.notifyDataSetChanged();
+
+                        // Show toast only if no matching records are found
+                        if (!foundMatch) {
+                            Toast.makeText(AccountantTransactionActivity.this, "Selected Month and year have no purchase history", Toast.LENGTH_SHORT).show();
+                        }
+                        } else {
+                            // No data found, handle the case (e.g., display a message)
+                            Toast.makeText(AccountantTransactionActivity.this, "No sold items data", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Handle errors if needed
+                        Log.e("FirebaseError", "Error fetching data: ", error.toException());
+                    }
+                });
+    }
+
+
     private void getDataFromFirebase( String MonthYear) {
         Log.d("May", "Fetching data from Firebase");
         Query query = databaseReference.child("Purchase History");
@@ -248,6 +416,7 @@ public class AccountantTransactionActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot datasnapshot) {
                 modelArrayList.clear();
+                boolean foundMatch = false; // Flag to check if any matching record is found
                 for (DataSnapshot snapshot : datasnapshot.getChildren()) {
                     Log.d("May", "Listener added");
 
@@ -259,30 +428,37 @@ public class AccountantTransactionActivity extends AppCompatActivity {
                     model.setFeedWeight(snapshot.child("feedWeight").getValue().toString());
                     model.setTotalPriceStr(snapshot.child("totalPriceStr").getValue().toString());
 
-                    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MM/yyyy");
+                    // Assuming you want to format the date for display or other purposes
+                    SimpleDateFormat inputFormatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    SimpleDateFormat outputFormatter = new SimpleDateFormat("MM/yyyy", Locale.getDefault());
 
-                    YearMonth yearMonth = YearMonth.parse(dateFire, inputFormatter);
-
-                    // Format the YearMonth object to the desired string format
-                    String formattedDateFire = yearMonth.format(outputFormatter);
-                    Log.d("DateConversion", "Formatted: " + formattedDateFire);// Output: 03/2024
-                    Log.d("DateConversion", "Formatted new: " + MonthYear);
-
-                    // Ensure selectedDate is correctly formatted and matches formattedDateFire
-                    if (formattedDateFire.equals(MonthYear)) {
-
-
-                        modelArrayList.add(model);
-                    }else{
-                        Toast.makeText(AccountantTransactionActivity.this, "Selected Month and year have no purchase history", Toast.LENGTH_SHORT).show();
+                    try {
+                        Date date = inputFormatter.parse(dateFire);
+                        String formattedDateFire = outputFormatter.format(date);
+                        Log.d("DateInto", "Formatted: " + formattedDateFire);
+                        Log.d("DateInto", "Formatted new: " + MonthYear);
+                        // Ensure selectedDate is correctly formatted and matches formattedDateFire
+                        if (formattedDateFire.equals(MonthYear)) {
+                            modelArrayList.add(model);
+                            foundMatch = true; // Set flag to true if a match is found
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        // Handle the exception
                     }
+
+
                 }
                 Log.d("LIST_SIZE", "List size: " + modelArrayList.size());
                 // After processing all the data, set the adapters to the RecyclerViews
                 recyclerAdapter = new RecyclerAdapter2(getApplicationContext(), modelArrayList);
                 recyclerViewCategoryList2.setAdapter(recyclerAdapter);
                 recyclerAdapter.notifyDataSetChanged();
+
+                // Show toast only if no matching records are found
+                if (!foundMatch) {
+                    Toast.makeText(AccountantTransactionActivity.this, "Selected Month and year have no purchase history", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -314,7 +490,7 @@ public class AccountantTransactionActivity extends AppCompatActivity {
                     // Calculate the next add budget button (add 1 month)
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(lastDate);
-                    calendar.add(Calendar.MONTH, 1);
+                    calendar.add(Calendar.DATE, 30); // Add 30 days
                     Date nextAdminDate = calendar.getTime();
 
                     // Format the Date object to a string in "dd/MM/yyyy" format

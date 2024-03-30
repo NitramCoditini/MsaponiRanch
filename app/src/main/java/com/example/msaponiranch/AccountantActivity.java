@@ -38,7 +38,7 @@ public class AccountantActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     StorageReference storageReference;
 
-    RadioButton Rb1,Rb2,Rb3;
+    RadioButton Rb1,Rb2;
     Button reset1 , back1;
 
     @Override
@@ -53,7 +53,6 @@ public class AccountantActivity extends AppCompatActivity {
         back1 = findViewById(R.id.accbackBtn1);
         Rb1 =  findViewById(R.id.accradioButton1);
         Rb2=  findViewById(R.id.accradioButton2);
-        Rb3=  findViewById(R.id.accradioButton3);
 
 
         storage = FirebaseStorage.getInstance();
@@ -99,18 +98,12 @@ public class AccountantActivity extends AppCompatActivity {
                 if(Rb1.isChecked()){
                     Rb1.setChecked(false);
                     Rb2.setEnabled(true);
-                    Rb3.setEnabled(true);
                 }
                 if(Rb2.isChecked()){
                     Rb2.setChecked(false);
                     Rb1.setEnabled(true);
-                    Rb3.setEnabled(true);
                 }
-                if(Rb3.isChecked()){
-                    Rb3.setChecked(false);
-                    Rb2.setEnabled(true);
-                    Rb1.setEnabled(true);
-                }
+
 
 
             }
@@ -122,7 +115,6 @@ public class AccountantActivity extends AppCompatActivity {
 
                 if (Rb1.isChecked()) {
                     Rb2.setEnabled(false);
-                    Rb3.setEnabled(false);
                     Intent i = new Intent(AccountantActivity.this, MakePurcharses.class);
                     startActivity(i);
                 }
@@ -134,25 +126,10 @@ public class AccountantActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (Rb2.isChecked()) {
                     Rb1.setEnabled(false);
-                    Rb3.setEnabled(false);
                     Intent i = new Intent(AccountantActivity.this, SellItems.class);
                     startActivity(i);
                 }
             }
-        });
-
-        Rb3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Rb3.isChecked()) {
-                    Rb2.setEnabled(false);
-                    Rb1.setEnabled(false);
-                    Toast.makeText(AccountantActivity.this, "Currently Unavailable", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-
         });
 
 
@@ -164,10 +141,8 @@ public class AccountantActivity extends AppCompatActivity {
         // Uncheck all radio buttons
         Rb1.setChecked(false);
         Rb2.setChecked(false);
-        Rb3.setChecked(false);
         // Enable all radio buttons
         Rb1.setEnabled(true);
         Rb2.setEnabled(true);
-        Rb3.setEnabled(true);
     }
 }

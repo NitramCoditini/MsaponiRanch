@@ -78,7 +78,7 @@ public class AnimalList extends AppCompatActivity {
 
 
                     modelArrayList.add(model);
-                    taskProgress();
+
 
 
 
@@ -107,62 +107,6 @@ public class AnimalList extends AppCompatActivity {
             }
         }
         modelArrayList = new ArrayList<>();
-    }
-    private  void taskProgress(){
-        String titleYours = "Milking";
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
-            Query query = databaseReference.child("Assigned Tasks").orderByChild("workerUserId").equalTo(uid);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    boolean taskFound = false;
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        // Check if the task title matches "Feeding"
-                        if (titleYours.equals(snapshot.child("title").getValue(String.class))) {
-                            // Retrieve the current progress value
-                            int currentProgress = snapshot.child("progressText").getValue(Integer.class);
-                            // Increment the progress value
-                            if(currentProgress == 25) {
-                                int newProgress = currentProgress + 45; // Assuming you want to increment by 10
-                                // Update the progress value only if it's not already at the desired value
-                                if (newProgress == 70) { // Assuming the maximum progress value is 100
-                                    snapshot.getRef().child("progressText").setValue(newProgress)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    // Task updated successfully
-                                                    Toast.makeText(AnimalList.this, "Task progress updated successfully", Toast.LENGTH_SHORT).show();
-                                                    // Navigate to AnimalFeeding activity
-
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    // Failed to update task
-                                                    Toast.makeText(AnimalList.this, "Failed to update task progress", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                } else {
-                                }
-                            }
-                        }
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    // Handle errors if needed
-                }
-            });
-        } else {
-            Toast.makeText(AnimalList.this, "No signed in user", Toast.LENGTH_SHORT).show();
-        }
-
-
     }
 
 

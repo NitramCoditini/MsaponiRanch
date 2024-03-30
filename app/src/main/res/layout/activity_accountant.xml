@@ -136,15 +136,7 @@
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
-                <RadioButton
-                    android:id="@+id/accradioButton3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/poppinsregular"
-                    android:text="Pay Workers"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
+
 
 
 

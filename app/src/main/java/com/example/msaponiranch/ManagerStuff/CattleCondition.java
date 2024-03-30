@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.msaponiranch.R;
@@ -35,6 +36,8 @@ public class CattleCondition extends AppCompatActivity {
 
     ArrayList<MilkingDetail> modelArrayListProducts;
 
+    TextView tvMilk;
+
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
@@ -42,6 +45,8 @@ public class CattleCondition extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cattle_condition);
+
+        tvMilk = findViewById(R.id.currentMilk);
 
         LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
         recyclerViewCategoryList3 = findViewById(R.id.recyclerViewCondition);
@@ -57,6 +62,25 @@ public class CattleCondition extends AppCompatActivity {
 
         databaseReference = firebaseDatabase.getInstance().getReference();
 
+
+        databaseReference.child("Milking Record").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Integer totalMilkInventory = snapshot.child("TotalMilkSizeAfterSelling").getValue(Integer.class);
+
+                    tvMilk.setText(totalMilkInventory + "L");
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle database errors
+            }
+        });
+
+
         modelArrayList = new ArrayList<>();
         modelArrayList1 = new ArrayList<>();
         modelArrayListProducts = new ArrayList<>();
@@ -69,7 +93,14 @@ public class CattleCondition extends AppCompatActivity {
 
 
 
+
+
+
+
     }
+
+
+
     private void getDataFromFirebase() {
 
         Log.d("May", "Fetching data from Firebase");
@@ -80,6 +111,7 @@ public class CattleCondition extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot datasnapshot) {
                 modelArrayList.clear();
+                if (datasnapshot.exists()) {
                 for (DataSnapshot snapshot : datasnapshot.getChildren()) {
                     Log.d("May", "Listener added");
 
@@ -101,7 +133,11 @@ public class CattleCondition extends AppCompatActivity {
                 recyclerAdapter = new RecyclerAdapterCondition(getApplicationContext(), modelArrayList);
                 recyclerViewCategoryList3.setAdapter(recyclerAdapter);
                 recyclerAdapter.notifyDataSetChanged();
-
+                } else {
+                    // No data found, handle the case (e.g., display a message)
+                    Toast.makeText(CattleCondition.this, "No currently sick cattle", Toast.LENGTH_SHORT).show();
+                  
+                }
 
             }
 
@@ -170,6 +206,10 @@ public class CattleCondition extends AppCompatActivity {
                 for (DataSnapshot snapshot : datasnapshot.getChildren()) {
                     Log.d("May", "Listener added");
 
+                    if (snapshot.getKey().equals("TotalMilkInventory") || snapshot.getKey().equals("TotalMilkSizeAfterSelling")) {
+                        continue;
+                    }
+
                     MilkingDetail model = new MilkingDetail();
 
                     model.setCowMiBreed(snapshot.child("cowMiBreed").getValue().toString());
@@ -179,15 +219,21 @@ public class CattleCondition extends AppCompatActivity {
                     model.setCurrentTime(snapshot.child("currentTime").getValue(Long.class));
 
 
-
                     modelArrayListProducts.add(model);
 
 
                 }
+
+
+
+
                 // After processing all the data, set the adapters to the RecyclerViews
                 recyclerAdapterProducts = new RecyclerAdapterMilking(getApplicationContext(), modelArrayListProducts);
                 recyclerViewCategoryListProducts.setAdapter(recyclerAdapterProducts);
                 recyclerAdapterProducts.notifyDataSetChanged();
+
+
+
 
 
             }

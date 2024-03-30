@@ -249,9 +249,11 @@ public class AssignmentTask extends AppCompatActivity {
 
                         Toast.makeText(AssignmentTask.this, ranchHand + " has been assigned a task successfully", Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(AssignmentTask.this , TaskAssigning.class);
-                        startActivity(intent);
-                        finish();
+                        titl.setText("");
+                        dateEditText.setText("");
+                        stTime.setText("");
+                        enTime.setText("");
+                        desc.setText("");
 
 
 
